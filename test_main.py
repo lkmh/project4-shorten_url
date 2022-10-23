@@ -58,6 +58,9 @@ def test_user_main():
     assert response.status_code == 200
     assert response.json() == {"user": int(login_userid)}
 
+""" Step 3 --- users sign up """
+
+
 params_signup_existing_main =  json.dumps({
             'email': login_email,
             'password': 'A12801@1a'
