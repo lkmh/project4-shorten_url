@@ -67,10 +67,10 @@ def logout(Authorize: AuthJWT = Depends()):
     return {"msg": "Successfully logout"}
 
 
-@router.get('/v1/partially-protected')
-def partially_protected(Authorize: AuthJWT = Depends()):
-      Authorize.jwt_optional()
+# @router.get('/v1/partially-protected')
+# def partially_protected(Authorize: AuthJWT = Depends()):
+#       Authorize.jwt_optional()
 
-      # If no jwt is sent in the request, get_jwt_subject() will return None
-      current_user = Authorize.get_jwt_subject() or "anonymous"
-      return {"user": current_user}
+#       # If no jwt is sent in the request, get_jwt_subject() will return None
+#       current_user = Authorize.get_jwt_subject() or "anonymous"
+#       return {"user": current_user}
