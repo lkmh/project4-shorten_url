@@ -53,6 +53,25 @@ def user(Authorize: AuthJWT = Depends()):
     current_user = Authorize.get_jwt_subject()
     return {"user": current_user}
 
+@router.patch('/v1/change_password')
+def change_password(old_password :str , new_password :str, Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    current_user = Authorize.get_jwt_subject()
+    hashed_old_password = hash_password(old_password)
+    get_current_hashed_password = get_password_from(current_user)
+    hashed_new_password = hash_password(new_password)
+    if hashed_old_password != get_current_hashed_password:
+      raise HTTPException(status_code=401, detail="password")
+
+    ## create new user 
+    elif hashed_new_password == get_current_hashed_password:
+      raise HTTPException(status_code=401, detail="New password cannot match old password")
+    elif is_Password_valid(new_password) == False:
+      raise HTTPException(status_code=401, detail="Password not valid")
+    else:
+      
+      update_password(current_user, hashed_new_password)
+      return {"msg": 'Password Changed Successfully'}
 
 @router.delete('/v1/logout')
 def logout(Authorize: AuthJWT = Depends()):

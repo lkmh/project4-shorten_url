@@ -113,6 +113,23 @@ def get_userid_from(email, password):
         return False 
     else:
         return int(data[0])
+def get_password_from(userid):
+    sql_string = "SELECT hash_password FROM users WHERE id='{}'".format(userid)
+    print(sql_string)
+    data = db.execute(sql_string).fetchone()
+    if data is None:
+        return False 
+    else:
+        return (data[0])
+
+def update_password(userid, new_password):
+    sql_string = "UPDATE users SET hash_password = '{}' WHERE id='{}'".format(new_password, userid)
+    print(sql_string)
+    data = db.execute(sql_string)
+    if data is None:
+        return False 
+    else:
+        return (data)
 
 """ admin """
 def clean_all_table(tablenamelist):
