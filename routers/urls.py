@@ -8,7 +8,7 @@ from sql.database import *
 
 router = APIRouter()
 
-@router.post('/shorten_url', status_code=200)
+@router.post('/v1/shorten_url', status_code=200)
 def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
     Authorize.jwt_optional()
     # If no jwt is sent in the request, get_jwt_subject() will return None
@@ -29,7 +29,7 @@ def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
 
 @router.get("/{short_URL}", response_class=RedirectResponse)
 async def redirect_fastapi(*, short_URL: str, request: Request):
-    if is_hash_unique(short_URL) == False :
+    if is_hash_unique(short_URL) == True :
         raise HTTPException(status_code=401, detail="Short URL is not Valid")
     user_agent = request.headers['user-agent']
     print('USER AGENT',user_agent)
@@ -41,3 +41,10 @@ async def redirect_fastapi(*, short_URL: str, request: Request):
     print('WEBSITE', website)
     urlviews_insert_new(short_URL, user_agent, clean_client_ip)
     return website  ### without the http:// got problem
+
+@router.get('/v1/analytics')
+def user(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+    current_user = Authorize.get_jwt_subject()
+    data = get_basic_analytics(current_user)
+    return {'data':data}

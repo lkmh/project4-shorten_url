@@ -5,6 +5,7 @@ import bcrypt
 from helper_functions.url_func import *
 from helper_functions.user_func import *
 from sql.connect_db import *
+import json
 
 """ For URL """
 
@@ -12,11 +13,12 @@ def is_hash_unique(hash):
     """ check if hash is unique """
     sql_string = "SELECT * FROM urls WHERE hash_url = '{}'".format(hash)
     print(sql_string)
-    data = db.execute(sql_string)
+    data = db.execute(sql_string).fetchone()
+    print("data",data)
     if data is None:
-        return True 
+        return True ## is NONE =>> hash not used before 
     else:
-        return False
+        return False ## å=>> hash  used before 
 
 def get_originalurl_with_hash(hash):
     """ query for original url using the hash """
@@ -67,12 +69,18 @@ def urlviews_insert_new(hash_url, user_agent=None, ip_address=None):
 
 
 def get_basic_analytics(userid):
-    sql_string = "SELECT urls.original_url, urls.hash_url, url_views.ip_address, url_views.user_agent, url_views.view_date, urls.userid FROM urls INNER JOIN url_views ON url_views.hash_url=urls.hash_url WHERE urls.userid={};".format(userid)
+    sql_string = 'SELECT urls.hash_url, COUNT(url_views.ip_address) AS "total_view_count", urls.original_url FROM urls INNER JOIN url_views ON url_views.hash_url=urls.hash_url WHERE urls.userid={} GROUP BY urls.hash_url, urls.original_url;'.format(userid)
     data = db.execute(sql_string).fetchall()
     if len(data) ==0:
         return False 
     else:
-        return data
+        dict_row = [row._asdict() for row in data ]
+        print("dicttype", type(dict_row))
+        final = json.dumps(dict_row, indent=1)
+        final = json.loads(final)
+        print("final type",type(final))
+        print("final",final)
+        return final
 
 """ for users """
 

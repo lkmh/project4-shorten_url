@@ -13,7 +13,7 @@ class User(BaseModel):
 
 router = APIRouter()
 
-@router.post('/signup')
+@router.post('/v1/signup')
 def login(user: User):
     ## check if email is valid
     if is_Email_valid(user.email) == False:
@@ -31,7 +31,7 @@ def login(user: User):
 # provide a method to create access tokens. The create_access_token()
 # function is used to actually generate the token to use authorization
 # later in endpoint protected
-@router.post('/login')
+@router.post('/v1/login')
 def login(user: User, Authorize: AuthJWT = Depends()):
     response = get_userid_from(user.email, user.password)
     print(response)
@@ -46,7 +46,7 @@ def login(user: User, Authorize: AuthJWT = Depends()):
 
 # protect endpoint with function jwt_required(), which requires
 # a valid access token in the request headers to access.
-@router.get('/user')
+@router.get('/v1/user')
 def user(Authorize: AuthJWT = Depends()):
     Authorize.jwt_required()
 
@@ -54,7 +54,7 @@ def user(Authorize: AuthJWT = Depends()):
     return {"user": current_user}
 
 
-@router.delete('/logout')
+@router.delete('/v1/logout')
 def logout(Authorize: AuthJWT = Depends()):
     """
       Because the JWT are stored in an httponly cookie now, we cannot
@@ -67,7 +67,7 @@ def logout(Authorize: AuthJWT = Depends()):
     return {"msg": "Successfully logout"}
 
 
-@router.get('/partially-protected')
+@router.get('/v1/partially-protected')
 def partially_protected(Authorize: AuthJWT = Depends()):
       Authorize.jwt_optional()
 

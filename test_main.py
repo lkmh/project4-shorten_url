@@ -39,7 +39,7 @@ params_login_main =  json.dumps({
         })
 
 def test_login_main():
-    response = client.post("/login", data=params_login_main)
+    response = client.post("/v1/login", data=params_login_main)
     assert response.status_code == 200
 
 
@@ -48,8 +48,8 @@ params_user_main =  json.dumps({
             'password': login_password
         })
 def test_user_main():
-    response = client.post("/login", data=params_user_main)
-    response = client.get("/user", cookies=response.cookies)
+    response = client.post("/v1/login", data=params_user_main)
+    response = client.get("/v1/user", cookies=response.cookies)
     assert response.status_code == 200
     assert response.json() == {"user": int(login_userid)}
 
@@ -62,7 +62,7 @@ params_signup_existing_main =  json.dumps({
         })
 
 def test_signup_existing_main():
-    response = client.post("/signup", data=params_signup_existing_main)
+    response = client.post("/v1/signup", data=params_signup_existing_main)
     assert response.status_code == 401
     assert response.json() == {"detail": "Email used before"}
 
@@ -72,7 +72,7 @@ params_signup_bademail_main =  json.dumps({
         })
 
 def test_signup_bademail_main():
-    response = client.post("/signup", data=params_signup_bademail_main)
+    response = client.post("/v1/signup", data=params_signup_bademail_main)
     assert response.status_code == 401
     assert response.json() == { "detail": "Bad email"}
 
@@ -82,7 +82,7 @@ params_signup_badpassword_main =  json.dumps({
         })
 
 def test_signup_badpassword_main():
-    response = client.post("/signup", data=params_signup_badpassword_main)
+    response = client.post("/v1/signup", data=params_signup_badpassword_main)
     assert response.status_code == 401
     assert response.json() == {"detail": "Password not valid"}
 
@@ -98,13 +98,13 @@ URL_list = [["digg", 401],[".com", 401],["digg.com",200]]
 
 def test_url_invalid_main():
     for url in URL_list:
-        endpoint = '/shorten_url?long_URL={}'.format(url[0])
+        endpoint = '/v1/shorten_url?long_URL={}'.format(url[0])
         response = client.post(endpoint)
         assert response.status_code == url[1]
 
 def test_create_shorten_in_DB_without_login():
     url = "https://digg.com"
-    endpoint = '/shorten_url?long_URL={}'.format(url)
+    endpoint = '/v1/shorten_url?long_URL={}'.format(url)
     response = client.post(endpoint)
     hash = response.json()['shorten_url']
     original_url = get_originalurl_with_hash(hash)
@@ -117,9 +117,9 @@ def test_create_shorten_in_DB_without_login():
 #         })
 
 def test_create_shorten_in_DB_with_login():
-    response = client.post("/login", data=params_login_main)
+    response = client.post("/v1/login", data=params_login_main)
     url = "https://digg.com"
-    endpoint = '/shorten_url?long_URL={}'.format(url)
+    endpoint = '/v1/shorten_url?long_URL={}'.format(url)
     response = client.post(endpoint)
     hash = response.json()['shorten_url']
     original_url = get_originalurl_with_hash(hash)
