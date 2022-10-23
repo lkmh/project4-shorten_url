@@ -36,7 +36,7 @@ def test_collision_with_existing_hash():
     response =  urls_insert_new("htts://google.com")
     assert response != "3066553"
 
-""" Step 3 - users auth """
+""" Step 3 - users auth - login and get user """
 
 params =  json.dumps({
             'email': login_email,
