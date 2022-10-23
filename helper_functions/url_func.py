@@ -1,5 +1,6 @@
 import hashlib
 import re
+import requests
 
 def hash_func_shorten_url(original_url):
     """ hash the original url to 7 """
@@ -7,7 +8,17 @@ def hash_func_shorten_url(original_url):
     return hash_url
 
 ### stuff to bring to a separate utils ####
-def formaturl(url):
+def format_url(url):
   if not re.match('(?:http|ftp|https)://', url):
     return 'http://{}'.format(url)
   return url
+
+def is_url_valid(input_url):
+    try: 
+        response = requests.get(format_url(input_url))
+        if response.status_code == 200:
+            return True 
+        else:
+            return False 
+    except:
+        return False 

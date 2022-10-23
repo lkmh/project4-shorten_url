@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import AuthJWTException
 from routers.users import router as users_router
+from routers.urls import router as urls_router
 from pydantic import BaseModel
 
 
@@ -38,4 +39,5 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
 
 
 app.include_router(users_router, tags=['users'])
+app.include_router(urls_router, tags=['urls'])
 
