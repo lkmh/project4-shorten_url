@@ -41,7 +41,7 @@ params_login_main =  json.dumps({
 def test_login_main():
     response = client.post("/login", data=params_login_main)
     assert response.status_code == 200
-    assert response.json() == {"msg": "Successfully login"}
+
 
 params_user_main =  json.dumps({
             'email': login_email,
@@ -126,4 +126,12 @@ def test_create_shorten_in_DB_with_login():
     userid = get_userid_with_hash(hash)['userid']
     assert url == original_url['original_url']
     assert int(login_userid) == userid
+
+""" step 4b redirection """
+
+def test_hash_not_valid():
+    hash = "/231789jk"
+    response = client.get(hash)
+    assert response.status_code == 401
+    assert response.json() ==  {"detail":"Short URL is not Valid"}
     

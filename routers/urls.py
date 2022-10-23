@@ -29,7 +29,7 @@ def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
 
 @router.get("/{short_URL}", response_class=RedirectResponse)
 async def redirect_fastapi(*, short_URL: str, request: Request):
-    if is_hash_unique(short_URL) :
+    if is_hash_unique(short_URL) == False :
         raise HTTPException(status_code=401, detail="Short URL is not Valid")
     user_agent = request.headers['user-agent']
     print('USER AGENT',user_agent)
