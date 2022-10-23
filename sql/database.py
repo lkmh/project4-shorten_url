@@ -86,7 +86,7 @@ def is_email_unique(email):
     """ check if email is unique """
     sql_string = "SELECT * FROM users WHERE email = '{}'".format(email)
     print(sql_string)
-    data = db.execute(sql_string)
+    data = db.execute(sql_string).fetchone()
     if data is None:
         return True 
     else:
@@ -119,29 +119,31 @@ def clean_all_table(tablenamelist):
 
 
 
-""" DUMMY DATA USERS"""
-dummary_data_users =[
-                        ['a@a.com', '1'],
-                        ['a2@a.com', '2'],
-                        ['a3@a.com', '3'],
-                        ['a4@a.com', '4'],
-                        ['a5@a.com', '5'],
-                        ['a6@a.com', '6'],
-                        ['a7@a.com', '7'],
-                    ]
+# """ DUMMY DATA USERS"""
+# dummary_data_users =[
+#                         ['a@a.com', '1'],
+#                         ['a2@a.com', '2'],
+#                         ['a3@a.com', '3'],
+#                         ['a4@a.com', '4'],
+#                         ['a5@a.com', '5'],
+#                         ['a6@a.com', '6'],
+#                         ['a7@a.com', '7'],
+#                     ]
 
-def get_min_userid_users():
-    sql_string = "SELECT MIN(id) FROM users"
-    data = db.execute(sql_string).fetchone()
-    return data[0]
+# def get_min_userid_users():
+#     sql_string = "SELECT MIN(id) FROM users"
+#     data = db.execute(sql_string).fetchone()
+#     return data[0]
 
-def get_max_userid_users():
-    sql_string = "SELECT MAX(id) FROM users"
-    data = db.execute(sql_string).fetchone()
-    return data[0]
+# def get_max_userid_users():
+#     sql_string = "SELECT MAX(id) FROM users"
+#     data = db.execute(sql_string).fetchone()
+#     return data[0]
 
-db_users_start = get_min_userid_users()
-db_users_end = get_max_userid_users()
+# # db_users_start = get_min_userid_users()
+# # db_users_end = get_max_userid_users()
+# print(is_email_unique("a@a.com"))
+# print(is_email_unique("123123a@a.com"))
 
 # dummy_URLs = [
 #                     ['https://google.com',""],
