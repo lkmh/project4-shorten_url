@@ -30,11 +30,6 @@ def test_get_original_url_with_hash():
     response = get_originalurl_with_hash("3066553")
     assert response ==  {"original_url": "https://google.com"}
 
-def test_collision_with_existing_hash():
-    """original_url = htts://google.com"""
-    existing_hash_for_google = "3066553"
-    response =  urls_insert_new("htts://google.com")
-    assert response != "3066553"
 
 """ Step 3 - users auth - login and get user """
 
@@ -91,5 +86,44 @@ def test_signup_badpassword_main():
     assert response.status_code == 401
     assert response.json() == {"detail": "Password not valid"}
 
+""" Step 4 ----- urls """
 
+def test_collision_with_existing_hash():
+    """original_url = htts://google.com"""
+    existing_hash_for_google = "3066553"
+    response =  urls_insert_new("htts://google.com")
+    assert response != "3066553"
 
+URL_list = [["digg", 401],[".com", 401],["digg.com",200]]
+
+def test_url_invalid_main():
+    for url in URL_list:
+        endpoint = '/shorten_url?long_URL={}'.format(url[0])
+        response = client.post(endpoint)
+        assert response.status_code == url[1]
+
+def test_create_shorten_in_DB_without_login():
+    url = "https://digg.com"
+    endpoint = '/shorten_url?long_URL={}'.format(url)
+    response = client.post(endpoint)
+    hash = response.json()['shorten_url']
+    original_url = get_originalurl_with_hash(hash)
+    userid = get_userid_with_hash(hash)['userid']
+    assert url == original_url['original_url']
+
+# params_login_main =  json.dumps({
+#             'email': login_email,
+#             'password': login_password
+#         })
+
+def test_create_shorten_in_DB_with_login():
+    response = client.post("/login", data=params_login_main)
+    url = "https://digg.com"
+    endpoint = '/shorten_url?long_URL={}'.format(url)
+    response = client.post(endpoint)
+    hash = response.json()['shorten_url']
+    original_url = get_originalurl_with_hash(hash)
+    userid = get_userid_with_hash(hash)['userid']
+    assert url == original_url['original_url']
+    assert int(login_userid) == userid
+    

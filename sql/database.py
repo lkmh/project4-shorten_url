@@ -28,6 +28,16 @@ def get_originalurl_with_hash(hash):
     else:
         return {'original_url': data[0]}
 
+def get_userid_with_hash(hash):
+    """ query for original url using the hash """
+    sql_string = "SELECT userid FROM urls WHERE hash_url = '{}'".format(hash)
+    print(sql_string)
+    data = db.execute(sql_string).fetchone()
+    if data is None:
+        return False 
+    else:
+        return {'userid': data[0]}
+
 def urls_insert_new(original_url, userid=None):
     """ insert new entry into the url db and create new hash """
     hash_url = hash_func_shorten_url(original_url)
@@ -37,7 +47,7 @@ def urls_insert_new(original_url, userid=None):
         salt = bcrypt.gensalt()
         new_original_url = original_url + str(salt.decode())
         hash_url = hash_func_shorten_url(new_original_url)
-    if userid:
+    if userid :
         sql_string = "INSERT INTO urls (original_url, hash_url, created_date, userid) VALUES ('{}','{}',{}, {})".format( original_url, hash_url, current_time_unix, userid)
     else:
         sql_string = "INSERT INTO urls (original_url, hash_url, created_date) VALUES ('{}','{}',{})".format( original_url, hash_url, current_time_unix)
