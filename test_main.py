@@ -1,11 +1,20 @@
 from fastapi.testclient import TestClient
 from sql.database import *
 from .main import app
+import json
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+login_email = os.environ.get('user')
+login_password = os.environ.get('password')
+login_userid = os.environ.get('userid')
 
 client = TestClient(app)
 
 
 """ Step 1 """
+
 def test_read_main():
     response = client.get("/")
     assert response.status_code == 200
@@ -26,3 +35,22 @@ def test_collision_with_existing_hash():
     existing_hash_for_google = "3066553"
     response =  urls_insert_new("htts://google.com")
     assert response != "3066553"
+
+""" Step 3 - users auth """
+
+params =  json.dumps({
+            'email': login_email,
+            'password': login_password
+        })
+
+def test_login_main():
+    response = client.post("/login", data=params)
+    assert response.status_code == 200
+    assert response.json() == {"msg": "Successfully login"}
+
+def test_user_main():
+    response = client.post("/login", data=params)
+    response = client.get("/user", cookies=response.cookies)
+    assert response.status_code == 200
+    assert response.json() == {"user": int(login_userid)}
+
