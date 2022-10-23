@@ -22,3 +22,8 @@ def is_url_valid(input_url):
             return False 
     except:
         return False 
+
+def clean_ip(ip_address):
+  ip_address = str(ip_address)
+  clean_ip = ip_address[2:]
+  return clean_ip 

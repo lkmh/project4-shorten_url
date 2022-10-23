@@ -27,3 +27,17 @@ def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
     return {'shorten_url' : hashed_url}
 
 
+@router.get("/{short_URL}", response_class=RedirectResponse)
+async def redirect_fastapi(*, short_URL: str, request: Request):
+    if is_hash_unique(short_URL) :
+        raise HTTPException(status_code=401, detail="Short URL is not Valid")
+    user_agent = request.headers['user-agent']
+    print('USER AGENT',user_agent)
+    client_ip = request.client.host
+    clean_client_ip = clean_ip(client_ip)
+    print('RAW USER IP',client_ip)
+    print('Clean USER IP',clean_client_ip)
+    website = get_originalurl_with_hash(short_URL)['original_url']
+    print('WEBSITE', website)
+    urlviews_insert_new(short_URL, user_agent, clean_client_ip)
+    return website  ### without the http:// got problem
