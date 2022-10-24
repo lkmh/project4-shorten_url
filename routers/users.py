@@ -59,7 +59,7 @@ def change_password(old_password :str , new_password :str, Authorize: AuthJWT = 
     current_user = Authorize.get_jwt_subject()
     hashed_old_password = hash_password(old_password)
     print("hashed_old_password", hashed_old_password)
-    get_current_hashed_password = get_password_from(current_user)
+    get_current_hashed_password = get_password_from_id(current_user)
     print('current password', get_current_hashed_password)
     hashed_new_password = hash_password(new_password)
     if hashed_old_password != get_current_hashed_password:

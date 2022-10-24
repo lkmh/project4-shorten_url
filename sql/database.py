@@ -149,6 +149,15 @@ def get_password_from(email):
     else:
         return (data[0])
 
+def get_password_from_id(id):
+    sql_string = "SELECT hash_password FROM users WHERE id='{}'".format(id)
+    print(sql_string)
+    data = db.execute(sql_string).fetchone()
+    if data is None:
+        return False 
+    else:
+        return (data[0])
+
 """ admin """
 def clean_all_table(tablenamelist):
     for tablename in tablenamelist:
