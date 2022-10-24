@@ -40,7 +40,7 @@ def login(user: User, Authorize: AuthJWT = Depends()):
     else:
     # subject identifier for who this token is for example id or username from database
         access_token = Authorize.create_access_token(subject=response)
-        Authorize.set_access_cookies(access_token)
+        Authorize.set_access_cookies(access_token, samesite='none')
         return {"msg": "Successfully login"}
 
 
