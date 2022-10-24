@@ -11,12 +11,13 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+  CORSMiddleware,
+  allow_origins=['http://localhost:3000','http://[::]:8000/','http://localhost:8000'],
+  allow_credentials=True,
+  allow_methods=["GET", "POST", "DELETE", "PATCH"], # include additional methods as per the application demand
+  allow_headers=["Content-Type","Set-Cookie"], # include additional headers as per the application demand
 )
+
 
 @app.get("/")
 def read_root():
