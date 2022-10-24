@@ -14,7 +14,7 @@ class User(BaseModel):
 router = APIRouter()
 
 @router.post('/v1/signup')
-def login(user: User):
+def signup(user: User):
     ## check if email is valid
     if is_Email_valid(user.email) == False:
       raise HTTPException(status_code=401, detail="Bad email") ## in product change to Bad email/password
@@ -69,7 +69,6 @@ def change_password(old_password :str , new_password :str, Authorize: AuthJWT = 
     elif is_Password_valid(new_password) == False:
       raise HTTPException(status_code=401, detail="Password not valid")
     else:
-      
       update_password(current_user, hashed_new_password)
       return {"msg": 'Password Changed Successfully'}
 
@@ -84,6 +83,31 @@ def logout(Authorize: AuthJWT = Depends()):
 
     Authorize.unset_jwt_cookies()
     return {"msg": "Successfully logout"}
+
+@router.post('/v1/forget_password_step1')
+def forget_password_step1(email: str):
+    ## check if email is valid
+    if is_Email_valid(email) == False:
+      raise HTTPException(status_code=200, detail="We will be sending you a temp password to reset password if email is valid")
+    ## check if email is unique 
+    if is_email_unique(email) == True:
+      raise HTTPException(status_code=200, detail="We will be sending you a temp password to reset password if email is valid")
+    temp_hash = get_password_from(email)[10:16]
+    send_reset_password(email, temp_hash)
+    return {"detail": "We will be sending you a temp password to reset password if email is valid"}
+
+@router.patch('/v1/forget_password_step2')
+def forget_password_step2(temp_hash :str , email: str, new_password :str):
+    if is_email_unique(email) == True:
+      raise HTTPException(status_code=200, detail="Please input correct email and hash")
+    original_forget_hash = get_password_from(email)[10:16]
+    if temp_hash != original_forget_hash:
+      raise HTTPException(status_code=200, detail="Please input correct email and hash")
+    if is_Password_valid(new_password) == False:
+      raise HTTPException(status_code=401, detail="New Password invalid")
+    hashed_new_password = hash_password(new_password)
+    update_password_with_email(email, hashed_new_password)
+    return {"msg": 'Password Changed Successfully'}
 
 
 # @router.get('/v1/partially-protected')
