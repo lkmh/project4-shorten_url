@@ -6,13 +6,18 @@ from routers.users import router as users_router
 from routers.urls import router as urls_router
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv, find_dotenv
+import os
 
+load_dotenv(find_dotenv())
+
+whitelist_IP = os.environ.get('WHITELIST')
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[whitelist_IP], ##
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
