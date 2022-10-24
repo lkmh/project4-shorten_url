@@ -5,10 +5,17 @@ from fastapi_jwt_auth.exceptions import AuthJWTException
 from routers.users import router as users_router
 from routers.urls import router as urls_router
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
