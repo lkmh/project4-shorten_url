@@ -11,13 +11,12 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 app.add_middleware(
-  CORSMiddleware,
-  allow_origins=['http://localhost:3000','http://[::]:8000/','http://localhost:8000'],
-  allow_credentials=True,
-  allow_methods=["GET", "POST", "DELETE", "PATCH"], # include additional methods as per the application demand
-  allow_headers=["Content-Type","Set-Cookie", "Access-Control-Allow-Origin"], # include additional headers as per the application demand
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-
 
 @app.get("/")
 def read_root():
@@ -26,12 +25,12 @@ def read_root():
 # in production you can use Settings management
 # from pydantic to get secret key from .env
 class Settings(BaseModel):
-  authjwt_secret_key: str = "secret"
+  authjwt_secret_key: str = "secret" ### to change 
   # Configure application to store and get JWT from cookies
   authjwt_token_location: set = {"cookies"}
   # Disable CSRF Protection for this example. default is True
   authjwt_cookie_csrf_protect: bool = False
-
+  authjwt_cookie_samesite = None 
 
 # callback to get your configuration
 @AuthJWT.load_config
