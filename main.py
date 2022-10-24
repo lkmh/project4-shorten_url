@@ -15,7 +15,7 @@ app.add_middleware(
   allow_origins=['http://localhost:3000','http://[::]:8000/','http://localhost:8000'],
   allow_credentials=True,
   allow_methods=["GET", "POST", "DELETE", "PATCH"], # include additional methods as per the application demand
-  allow_headers=["Content-Type","Set-Cookie"], # include additional headers as per the application demand
+  allow_headers=["Content-Type","Set-Cookie", "Access-Control-Allow-Origin"], # include additional headers as per the application demand
 )
 
 
