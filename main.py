@@ -30,7 +30,7 @@ class Settings(BaseModel):
   authjwt_token_location: set = {"cookies"}
   # Disable CSRF Protection for this example. default is True
   authjwt_cookie_csrf_protect: bool = False
-  authjwt_cookie_samesite = None 
+  authjwt_cookie_samesite: str = 'none'
 
 # callback to get your configuration
 @AuthJWT.load_config
