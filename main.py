@@ -37,6 +37,7 @@ class Settings(BaseModel):
   authjwt_cookie_csrf_protect: bool = False
   authjwt_cookie_samesite: str = "none"
   authjwt_cookie_secure: bool = True
+  authjwt_access_token_expires: int = 10
 
 # callback to get your configuration
 @AuthJWT.load_config

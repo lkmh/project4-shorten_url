@@ -11,9 +11,12 @@ router = APIRouter()
 @router.post('/v1/shorten_url', status_code=200)
 def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
     Authorize.jwt_optional()
+    
     # If no jwt is sent in the request, get_jwt_subject() will return None
     current_user = Authorize.get_jwt_subject() or ""
-
+    if current_user != "":
+        new_access_token = Authorize.create_access_token(subject=current_user)
+        Authorize.set_access_cookies(new_access_token, max_age=60)
     ## check if url valid 
     if is_url_valid(long_URL) == False:
         raise HTTPException(status_code=401, detail="URL is not Valid")
@@ -44,7 +47,10 @@ async def redirect_fastapi(*, short_URL: str, request: Request):
 
 @router.get('/v1/analytics')
 def user(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+    # Authorize.jwt_required()
+    Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    Authorize.set_access_cookies(new_access_token, max_age=60)
     data = get_basic_analytics(current_user)
     return {'data':data}

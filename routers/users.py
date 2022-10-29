@@ -39,8 +39,10 @@ def login(user: User, Authorize: AuthJWT = Depends()):
         raise HTTPException(status_code=401, detail="Bad username or password")
     else:
     # subject identifier for who this token is for example id or username from database
-        access_token = Authorize.create_access_token(subject=response)
-        Authorize.set_access_cookies(access_token)
+        access_token = Authorize.create_access_token(subject=response, expires_time=10)
+        refresh_token = Authorize.create_refresh_token(subject=response)
+        Authorize.set_access_cookies(access_token, max_age=60)
+        Authorize.set_refresh_cookies(refresh_token, max_age=60*60*24*30)
         return {"msg": "Successfully login"}
 
 
@@ -48,14 +50,17 @@ def login(user: User, Authorize: AuthJWT = Depends()):
 # a valid access token in the request headers to access.
 @router.get('/v1/user')
 def user(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
-
+    # Authorize.jwt_required()
+    Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    Authorize.set_access_cookies(new_access_token, max_age=60)
     return {"user": current_user}
 
 @router.patch('/v1/change_password')
 def change_password(old_password :str , new_password :str, Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
+    # Authorize.jwt_required()
+    Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
     hashed_old_password = hash_password(old_password)
     print("hashed_old_password", hashed_old_password)
@@ -72,6 +77,12 @@ def change_password(old_password :str , new_password :str, Authorize: AuthJWT = 
       raise HTTPException(status_code=401, detail="Password not valid")
     else:
       update_password(current_user, hashed_new_password)
+      Authorize.unset_jwt_cookies()
+      new_access_token = Authorize.create_access_token(subject=current_user)
+      Authorize.set_access_cookies(new_access_token, max_age=60)
+      
+      refresh_token = Authorize.create_refresh_token(subject=current_user)
+      Authorize.set_refresh_cookies(refresh_token, max_age=60*60*24*30)
       return {"msg": 'Password Changed Successfully'}
 
 @router.delete('/v1/logout')
@@ -81,7 +92,8 @@ def logout(Authorize: AuthJWT = Depends()):
       log the user out by simply deleting the cookies in the frontend.
       We need the backend to send us a response to delete the cookies.
       """
-    Authorize.jwt_required()
+    # Authorize.jwt_required()
+    Authorize.jwt_refresh_token_required()
 
     Authorize.unset_jwt_cookies()
     return {"msg": "Successfully logout"}
