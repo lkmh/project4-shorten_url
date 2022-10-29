@@ -30,7 +30,7 @@ def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
     hashed_url = urls_insert_new(db_url, userid=current_user)
     return {'shorten_url' : hashed_url}
 
-@router.post('/v2/shorten_url', status_code=200)
+@router.get('/v2/shorten_url', status_code=200)
 def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
     Authorize.jwt_refresh_token_required()
     
