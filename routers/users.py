@@ -81,8 +81,8 @@ def change_password(old_password :str , new_password :str, Authorize: AuthJWT = 
       # new_access_token = Authorize.create_access_token(subject=current_user)
       # Authorize.set_access_cookies(new_access_token, max_age=60)
       
-      refresh_token = Authorize.create_refresh_token(subject=current_user)
-      Authorize.set_refresh_cookies(refresh_token, max_age=60*60*24*30)
+      # refresh_token = Authorize.create_refresh_token(subject=current_user)
+      # Authorize.set_refresh_cookies(refresh_token, max_age=60*60*24*30)
       return {"msg": 'Password Changed Successfully'}
 
 @router.delete('/v1/logout')
