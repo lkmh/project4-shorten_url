@@ -77,7 +77,7 @@ def change_password(old_password :str , new_password :str, Authorize: AuthJWT = 
       raise HTTPException(status_code=401, detail="Password not valid")
     else:
       update_password(current_user, hashed_new_password)
-      Authorize.unset_jwt_cookies()
+      # Authorize.unset_jwt_cookies()
       new_access_token = Authorize.create_access_token(subject=current_user)
       Authorize.set_access_cookies(new_access_token, max_age=60)
       
