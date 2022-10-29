@@ -97,12 +97,11 @@ def logout(Authorize: AuthJWT = Depends()):
     # Authorize.jwt_required()
     Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
-    Authorize.jwt_refresh_token_required()
     new_access_token = Authorize.create_access_token(subject=current_user)
-    Authorize.set_access_cookies(new_access_token, max_age=0)
+    Authorize.set_access_cookies(new_access_token, max_age=1)
       
     refresh_token = Authorize.create_refresh_token(subject=current_user)
-    Authorize.set_refresh_cookies(refresh_token, max_age=0)
+    Authorize.set_refresh_cookies(refresh_token, max_age=1)
     Authorize.unset_jwt_cookies()
     return {"msg": "Successfully logout"}
 
