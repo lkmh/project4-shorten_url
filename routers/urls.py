@@ -30,6 +30,28 @@ def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
     hashed_url = urls_insert_new(db_url, userid=current_user)
     return {'shorten_url' : hashed_url}
 
+@router.post('/v2/shorten_url', status_code=200)
+def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
+    Authorize.jwt_refresh_token_required()
+    
+    # If no jwt is sent in the request, get_jwt_subject() will return None
+    current_user = Authorize.get_jwt_subject() 
+    print("SHORTEN URL", current_user)
+
+    new_access_token = Authorize.create_access_token(subject=current_user)
+    Authorize.set_access_cookies(new_access_token, max_age=60)
+    ## check if url valid 
+    if is_url_valid(long_URL) == False:
+        raise HTTPException(status_code=401, detail="URL is not Valid")
+    
+    ## if url is a domain insert htts:
+    db_url = format_url(long_URL)
+
+    ## insert to db 
+
+    hashed_url = urls_insert_new(db_url, userid=current_user)
+    return {'shorten_url' : hashed_url}
+
 
 @router.get("/{short_URL}", response_class=RedirectResponse)
 async def redirect_fastapi(*, short_URL: str, request: Request):
