@@ -57,11 +57,13 @@ def user(Authorize: AuthJWT = Depends()):
     Authorize.set_access_cookies(new_access_token, max_age=60)
     return {"user": current_user}
 
-@router.patch('/v1/change_password')
+@router.get('/v1/change_password')
 def change_password(old_password :str , new_password :str, Authorize: AuthJWT = Depends()):
     # Authorize.jwt_required()
+    print('yes')
     Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
+    print(current_user)
     hashed_old_password = hash_password(old_password)
     print("hashed_old_password", hashed_old_password)
     get_current_hashed_password = get_password_from_id(current_user)
@@ -77,13 +79,13 @@ def change_password(old_password :str , new_password :str, Authorize: AuthJWT = 
       raise HTTPException(status_code=401, detail="Password not valid")
     else:
       update_password(current_user, hashed_new_password)
-      # Authorize.unset_jwt_cookies()
-      # new_access_token = Authorize.create_access_token(subject=current_user)
-      # Authorize.set_access_cookies(new_access_token, max_age=60)
+      Authorize.unset_jwt_cookies()
+      new_access_token = Authorize.create_access_token(subject=current_user)
+      Authorize.set_access_cookies(new_access_token, max_age=60)
       
-      # refresh_token = Authorize.create_refresh_token(subject=current_user)
-      # Authorize.set_refresh_cookies(refresh_token, max_age=60*60*24*30)
-      return {"msg": 'Password Changed Successfully'}
+      refresh_token = Authorize.create_refresh_token(subject=current_user)
+      Authorize.set_refresh_cookies(refresh_token, max_age=60*60*24*30)
+    return {"msg": 'Password Changed Successfully'}
 
 @router.delete('/v1/logout')
 def logout(Authorize: AuthJWT = Depends()):
