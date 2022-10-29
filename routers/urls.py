@@ -14,6 +14,7 @@ def shorten_url(*, long_URL: str, Authorize: AuthJWT = Depends()):
     
     # If no jwt is sent in the request, get_jwt_subject() will return None
     current_user = Authorize.get_jwt_subject() or ""
+    print("SHORTEN URL", current_user)
     if current_user != "":
         new_access_token = Authorize.create_access_token(subject=current_user)
         Authorize.set_access_cookies(new_access_token, max_age=60)
