@@ -1,4 +1,4 @@
-from redis_connect import redis_connection as r
+from redis_folder.redis_connect import redis_connection as r
 
 print(r.get(123123).decode('UTF-8'))
 
