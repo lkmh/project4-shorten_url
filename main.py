@@ -10,6 +10,7 @@ from dotenv import load_dotenv, find_dotenv
 import os
 
 load_dotenv(find_dotenv())
+jwt_secret = os.environ.get('authjwt_secret_key')
 
 whitelist_IP = os.environ.get('WHITELIST')
 
@@ -30,7 +31,7 @@ def read_root():
 # in production you can use Settings management
 # from pydantic to get secret key from .env
 class Settings(BaseModel):
-  authjwt_secret_key: str = "secret" ### to change 
+  authjwt_secret_key: str = jwt_secret ### to change 
   # Configure application to store and get JWT from cookies
   authjwt_token_location: set = {"cookies"}
   # Disable CSRF Protection for this example. default is True

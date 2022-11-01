@@ -6,6 +6,7 @@ from helper_functions.url_func import *
 from helper_functions.user_func import *
 from sql.connect_db import *
 import json
+from redis_folder.redis_func import *
 
 """ For URL """
 
@@ -21,10 +22,15 @@ def is_hash_unique(hash):
         return False ## å=>> hash  used before 
 
 def get_originalurl_with_hash(hash):
+    if redis_check_if_exist(hash):
+        print('Retrieve from Redis')
+        return {'original_url': redis_get(hash)}
     """ query for original url using the hash """
     sql_string = "SELECT original_url FROM urls WHERE hash_url = '{}'".format(hash)
     print(sql_string)
     data = db.execute(sql_string).fetchone()
+    redis_store(hash,data[0])
+    print('Store New in Redis')
     if data is None:
         return False 
     else:
