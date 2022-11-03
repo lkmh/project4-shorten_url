@@ -169,4 +169,3 @@ def clean_all_table(tablenamelist):
     for tablename in tablenamelist:
         sql_string = "DELETE FROM {}".format(tablename)
         db.execute(sql_string)
-

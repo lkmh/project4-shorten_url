@@ -113,7 +113,7 @@ def forget_password_step1(email: str):
     ## check if email is unique 
     if is_email_unique(email) == True:
       raise HTTPException(status_code=200, detail="We will be sending you a temp password to reset password if email is valid")
-    temp_hash = get_password_from(email)[10:16]
+    temp_hash = get_password_from(email)[30:36]
     send_reset_password(email, temp_hash)
     return {"detail": "We will be sending you a temp password to reset password if email is valid"}
 
