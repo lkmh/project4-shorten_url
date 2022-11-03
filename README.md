@@ -78,15 +78,11 @@ Cache ⇒ Redis
 
 **The more important implementation:**
 
-1. Hashing ⇒ 4 character hash is more than enough for 6M URLs
+1. Hashing ⇒ 6 character hash is more than enough for 6M URLs using SHA1
     
-    We can use base64 ([A-Z, a-z, 0-9]) + / 
+    A SHA-1 hash has 40 base-16 digits. If we take the first 6 char => 16.7M, 1st7 => 268M 1st5 => 1M
     
-    6M URLs ⇒ 64**4 characters ⇒ 16.7m unique strings can be generates
-    
-    Coded for 5 characters ⇒ potentially 1billion at base 64
-    
-    Coded for 5 characters ⇒ potentially 600M at base 36
+    Why SHA-1 => hash cannot be decoded, and it generates a fixed length of string vs base 64 unconfirmed length
     
     Check for uniqueness of hash if not unique use hash (original_url + bcrypt.gensalt()) [gensalt inserts random string] 
     
