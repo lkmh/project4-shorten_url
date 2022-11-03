@@ -7,7 +7,7 @@ Create shorter aliases for long URL
 Original url:
 
 <aside>
-💡 [https://stackoverflow.com/questions/43002444/make-axios-send-cookies-in-its-requests-automatically](https://stackoverflow.com/questions/43002444/make-axios-send-cookies-in-its-requests-automatically)
+💡 https://stackoverflow.com/questions/43002444/make-axios-send-cookies-in-its-requests-automatically
 
 </aside>
 
