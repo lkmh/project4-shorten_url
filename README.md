@@ -35,19 +35,19 @@ Output: users of the website can share this shorter link with friends
 3. Storage estimates: Storing every URL for 5 years 
     1. 100k new URL per month X 5 years X12 months ⇒ 6M 
     2. 1 URL shouldnt be bigger than 255 bytes (FYI based **[on a data set of 6.6m unique URL, 78k unique domains](http://www.supermind.org/blog/740/average-length-of-a-url-part-2)** ⇒ average 77bytes )
-    3. Storage required:  255 * 6B ⇒ 1.5B bytes of 1.5GB 
+    3. Storage required:  255 * 6M ⇒ 1.5B bytes of 1.5GB 
         1. elephantsql free 20mb is not enough 
-4. Memory Estimates: 10M/30 * 20% * 500btyes ⇒ 33 MB
+4. Cache Memory Estimates: 10M/30 days * 20% * (255+8) btyes ⇒ 17.6 MB
 
 ## Tech Stack
 
 1. Frontend ⇒ HTML, CSS, JS
-    1. I have used React already. Given that re-direct are 100:1, the frontend will be less used by user base
+    1. I have used React already. Given that re-direct are 100:1, the frontend will be less used by users
 2. Backend ⇒ Fastapi 
     1. It is FAST and auto generates the schema. 
     2. JWT in cookies - with refresh and access token with logout 
     
-    [https://project4-short-url.herokuapp.com/docs](https://project4-short-url.herokuapp.com/docs)
+    SEE: https://project4-short-url.herokuapp.com/docs
     
 3. Storage ⇒ Postgres SQL 
     1. Structured data, also i tried mongo in project 2 
