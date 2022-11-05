@@ -26,32 +26,32 @@ def test_read_main():
 #     response = get_max_userid_users()
 #     assert response == 7
 
-def test_get_original_url_with_hash():
-    response = get_originalurl_with_hash("3066553")
-    assert response ==  {"original_url": "https://google.com"}
+# def test_get_original_url_with_hash():
+#     response = get_originalurl_with_hash("3066553")
+#     assert response ==  {"original_url": "https://google.com"}
 
 
 """ Step 3 - users auth - login and get user """
 
-params_login_main =  json.dumps({
-            'email': login_email,
-            'password': login_password
-        })
+# params_login_main =  json.dumps({
+#             'email': login_email,
+#             'password': login_password
+#         })
 
-def test_login_main():
-    response = client.post("/v1/login", data=params_login_main)
-    assert response.status_code == 200
+# def test_login_main():
+#     response = client.post("/v1/login", data=params_login_main)
+#     assert response.status_code == 200
 
 
-params_user_main =  json.dumps({
-            'email': login_email,
-            'password': login_password
-        })
-def test_user_main():
-    response = client.post("/v1/login", data=params_user_main)
-    response = client.get("/v1/user", cookies=response.cookies)
-    assert response.status_code == 200
-    assert response.json() == {"user": int(login_userid)}
+# params_user_main =  json.dumps({
+#             'email': login_email,
+#             'password': login_password
+#         })
+# def test_user_main():
+#     response = client.post("/v1/login", data=params_user_main)
+#     response = client.get("/v1/user", cookies=response.cookies)
+#     assert response.status_code == 200
+#     assert response.json() == {"user": int(login_userid)}
 
 """ Step 3 --- users sign up """
 
@@ -116,16 +116,16 @@ def test_create_shorten_in_DB_without_login():
 #             'password': login_password
 #         })
 
-def test_create_shorten_in_DB_with_login():
-    response = client.post("/v1/login", data=params_login_main)
-    url = "https://digg.com"
-    endpoint = '/v1/shorten_url?long_URL={}'.format(url)
-    response = client.post(endpoint)
-    hash = response.json()['shorten_url']
-    original_url = get_originalurl_with_hash(hash)
-    userid = get_userid_with_hash(hash)['userid']
-    assert url == original_url['original_url']
-    assert int(login_userid) == userid
+# def test_create_shorten_in_DB_with_login():
+#     response = client.post("/v1/login", data=params_login_main)
+#     url = "https://digg.com"
+#     endpoint = '/v1/shorten_url?long_URL={}'.format(url)
+#     response = client.post(endpoint)
+#     hash = response.json()['shorten_url']
+#     original_url = get_originalurl_with_hash(hash)
+#     userid = get_userid_with_hash(hash)['userid']
+#     assert url == original_url['original_url']
+#     assert int(login_userid) == userid
 
 """ step 4b redirection """
 

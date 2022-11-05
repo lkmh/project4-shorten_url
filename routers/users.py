@@ -121,7 +121,7 @@ def forget_password_step1(email: str):
 def forget_password_step2(temp_hash :str , email: str, new_password :str):
     if is_email_unique(email) == True:
       raise HTTPException(status_code=200, detail="Please input correct email and hash")
-    original_forget_hash = get_password_from(email)[10:16]
+    original_forget_hash = get_password_from(email)[30:36]
     if temp_hash != original_forget_hash:
       raise HTTPException(status_code=200, detail="Please input correct email and hash")
     if is_Password_valid(new_password) == False:
